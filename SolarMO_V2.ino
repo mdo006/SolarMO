@@ -113,14 +113,14 @@ long avgFrontSensorReadings()
 
 void outputFrontSensorReadings()
 {
-  Serial.print("Front Sensor Reading 1: ");
-  Serial.println(frontSensorReading1);
-  Serial.print("Front Sensor Reading 2: ");
-  Serial.println(frontSensorReading2);
-  Serial.print("Front Sensor Reading 3: ");
-  Serial.println(frontSensorReading3);
-  Serial.print("Average Front Sensor Reading: ");
-  Serial.println(avgFrontSensorReadings());
+  Serial2.print("Front Sensor Reading 1: ");
+  Serial2.println(frontSensorReading1);
+  Serial2.print("Front Sensor Reading 2: ");
+  Serial2.println(frontSensorReading2);
+  Serial2.print("Front Sensor Reading 3: ");
+  Serial2.println(frontSensorReading3);
+  Serial2.print("Average Front Sensor Reading: ");
+  Serial2.println(avgFrontSensorReadings());
 }
 
 void traversePane_1() 
@@ -162,10 +162,10 @@ void traversePanel_2()
 void manualMode() 
 {
   //if (Serial2.available()) 
-  if (Serial.available())
+  if (Serial2.available())
   {
     //input = Serial2.read();
-    input = Serial.read();
+    input = Serial2.read();
 
     if (input == 'w') {
       forward();  
@@ -188,9 +188,7 @@ void manualMode()
 void setup() 
 {
   // put your setup code here, to run once:
-
-  //Serial2.begin(9600);
-  Serial.begin(9600);
+  Serial2.begin(9600);
   
   AFMS.begin(); //initialize the shield with default freq of 1.6 KHz
 
@@ -218,7 +216,7 @@ void loop()
   //forward();
   //traversePanel();
   
-  Serial.println(avgFrontSensorReadings());
+  Serial2.println(avgFrontSensorReadings());
   delay(50);
   //outputFrontSensorReadings();
 }
