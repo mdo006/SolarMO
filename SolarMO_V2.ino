@@ -4,7 +4,7 @@
 #define leftTRIG 10
 #define leftECHO 26
 #define frontTRIG 9
-#define frontECHO 8 //22
+#define frontECHO 22
 #define rightTRIG 3
 #define rightECHO 24
 #define interruptR 19
