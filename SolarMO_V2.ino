@@ -9,8 +9,8 @@
 #define rightECHO 24
 #define interruptR 19
 #define interruptL 18
-//#define MAX_DIS 500
-//#define MAX_DIS_FRONT 6 //distance from sensor to solar panel
+#define MAX_DIS 500
+#define MAX_DIS_FRONT 6 //distance from sensor to solar panel
 
 // Create the motor shield object with the default I2C address
 Adafruit_MotorShield AFMS = Adafruit_MotorShield(); 
@@ -22,7 +22,7 @@ Adafruit_DCMotor *motor2 = AFMS.getMotor(3); //M3 (DC Motor 2)
 
 //Ultrasonic Sensor Objects
 NewPing leftPing(leftTRIG, leftECHO, MAX_DIS);
-NewPing frontPing(frontTRIG, frontECHO, MAX_DIS);
+NewPing frontPing(frontTRIG, frontECHO, MAX_DIS_FRONT);
 NewPing rightPing(rightTRIG, rightECHO, MAX_DIS);
 
 long avgFrontSensorReading;
