@@ -26,13 +26,17 @@ NewPing leftPing(leftTRIG, leftECHO, sideMAX_DIS);
 
 enum PINGState { INIT_1, PING_1, PING_2, PING_3 } PING_State;
 enum rBOTState { INIT_2, FWD, BCK, rTURN, lTURN, TURN90 } rBOT_State;
+enum Bluetooth_State {B_WAIT, B_FORWARD, B_LEFT, B_REVERSE, B_RIGHT, B_HALT} b_state;
 
 //variable definitions(definitions should usually be done in the source file)
+int tick180 = 232;
 int tick90 = 116;
 int tick45 = 58;
 int frontSensorAvg = 0;
 int rightSensorAvg = 0;
 int leftSensorAvg = 0;
+
+char input = ' ';
 
 void PING_Init() {
     Serial.begin(9600);
@@ -204,5 +208,120 @@ void rBOT_Tick() {
     }
 }
 
+void Bluetooth_Init()
+{
+  b_state = B_WAIT;
+}
+
+void Bluetooth_Tick()
+{
+  //Actions
+  switch(b_state)
+  {
+    case B_WAIT:
+      if (Serial.available())
+      {
+        input = Serial.read();
+      }
+      break;
+
+    case B_FORWARD:
+      if (frontSensorAvg == 0)
+      {
+        input = ' '; //when it goes back to wait, it will go to halt
+      }
+      else if (frontSensorAvg > 0)
+      {
+        forward(); 
+      }
+      break;
+
+    case B_LEFT:
+      if (leftSensorAvg== 0)
+      {
+        input = ' ';
+      }
+      else if (leftSensorAvg > 0)
+      {
+        turnLeftAmt(tick45);
+        input = ' ';
+      }
+      break;
+
+    case B_REVERSE:
+      turnLeftAmt(tick180); //turn around and then stop
+      input = ' ';
+      break;
+
+    case B_RIGHT:
+      if (rightSensorAvg == 0)
+      {
+        input = ' ';
+      }
+      else if (rightSensorAvg > 0)
+      {
+        turnRightAmt(tick45);
+        input = ' ';
+      }
+      break;
+
+    case B_HALT:
+      halt();
+      break;
+
+    default:
+      break;
+  }
+  
+  //Transitions
+  switch(b_state)
+  {
+    case B_WAIT:
+        if (input == 'w') //forward
+        {
+          b_state = B_FORWARD;
+        }
+        else if (input == 'a') //left
+        {
+          b_state = B_LEFT;
+        }
+        else if (input == 's') //reverse
+        {
+          b_state = B_REVERSE;
+        }
+        else if (input == 'd') //right
+        {
+          b_state = B_RIGHT;
+        }
+        else //halt
+        {
+          b_state = B_HALT;
+        }
+      break;
+
+    case B_FORWARD:
+      b_state = B_WAIT;
+      break;
+
+    case B_LEFT:
+      b_state = B_WAIT;
+      break;
+
+    case B_REVERSE:
+      b_state = B_WAIT;
+      break;
+
+    case B_RIGHT:
+      b_state = B_WAIT;
+      break;
+
+    case B_HALT:
+      b_state = B_WAIT;
+      break;
+
+    default:
+      break;
+  }
+}
 
 #endif
